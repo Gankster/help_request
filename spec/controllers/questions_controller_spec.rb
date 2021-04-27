@@ -17,25 +17,27 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attrubutes' do
+      subject(:request) { post :create, params: { question: attributes_for(:question) } }
+
       it 'saves a new question in DB' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { request }.to change(Question, :count).by(1)
       end
 
       it 'renders :show view' do
-        post :create, params: { question: attributes_for(:question) }
+        request
         expect(response).to render_template :show
       end
     end
 
     context 'with invalid attrubutes' do
+      subject(:request) { post :create, params: { question: attributes_for(:question, :invalid) } }
+
       it 'does not save the question' do
-        expect do
-          post :create, params: { question: attributes_for(:question, :invalid) }
-        end.not_to change(Question, :count)
+        expect { request }.not_to change(Question, :count)
       end
 
       it 'renders :new view' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
+        request
         expect(response).to render_template :new
       end
     end
