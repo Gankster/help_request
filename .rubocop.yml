@@ -31,10 +31,14 @@ Style/FrozenStringLiteralComment:
 
 Layout/LineLength:
   Max: 120
+
 Metrics/MethodLength:
   Max: 20
 Metrics/AbcSize:
   Max: 20
-
+Metrics/BlockLength:
+  Max: 25
+  Exclude:
+    - "spec/**/*"
 Bundler/OrderedGems:
   Enabled: false
