@@ -4,6 +4,10 @@ Rails.application.routes.draw do
 
   resources :questions do
     resources :answers, shallow: true
+
+    member do
+      patch 'mark_best/:answer_id', to: 'questions#mark_best', as: :mark_best
+    end
   end
 
   root to: "questions#index"
