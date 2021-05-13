@@ -4,6 +4,7 @@ RSpec.describe Question, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:answers).dependent(:destroy) }
     it { is_expected.to belong_to(:author).class_name('User') }
+    it { is_expected.to belong_to(:best_answer).class_name('Answer').optional }
   end
 
   describe 'validations' do
