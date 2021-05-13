@@ -14,7 +14,7 @@ feature 'Someone can get list of answers' do
     end
 
     scenario 'show list with best answer' do
-      question.mark_as_best_answer(question.answers.first.id)
+      question.answers.first.mark_as_best_answer
       visit question_path(question)
 
       expect(page).to have_content 'Best!'

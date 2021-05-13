@@ -10,6 +10,10 @@ class Answer < ApplicationRecord
     question.best_answer_id == id
   end
 
+  def mark_as_best_answer
+    question.update(best_answer_id: id)
+  end
+
   private
 
   def clear_best_answer

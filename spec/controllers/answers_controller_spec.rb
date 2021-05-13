@@ -105,6 +105,42 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #mark_best' do
+    subject(:http_request) do
+      patch :mark_best, params: { id: answer }, format: :js
+    end
+
+    context 'when user is the author of question' do
+      let(:question) { create(:question, :with_answers, author: user) }
+      let(:answer) { question.answers.first }
+
+      it 'has best answer' do
+        http_request
+        expect(question.reload.best_answer_id).to eq answer.id
+      end
+
+      it 'renders :mark_best view' do
+        http_request
+        expect(response).to render_template :mark_best
+      end
+    end
+
+    context 'when user is not the author of question' do
+      let(:question) { create(:question, :with_answers) }
+      let(:answer) { question.answers.first }
+
+      it 'has best answer' do
+        http_request
+        expect(question.best_answer_id).to eq nil
+      end
+
+      it 'renders mark_best view' do
+        http_request
+        expect(flash[:notice]).to eq 'You must be the author to mark the answer as best.'
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     subject(:http_request) { delete :destroy, params: { id: answer }, format: :js }
 

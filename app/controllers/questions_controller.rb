@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show destroy edit update mark_best]
+  before_action :load_question, only: %i[show destroy edit update]
 
   def index
     @questions = Question.all
@@ -34,15 +34,6 @@ class QuestionsController < ApplicationController
       flash[:errors] = @question.errors.full_messages
     else
       flash[:notice] = 'You must be the author to edit the question.'
-    end
-  end
-
-  def mark_best
-    @former_best_answer = @question.best_answer
-    if current_user.author?(@question)
-      @question.mark_as_best_answer(params[:answer_id])
-    else
-      flash[:notice] = 'You must be the author to mark the answer as best.'
     end
   end
 

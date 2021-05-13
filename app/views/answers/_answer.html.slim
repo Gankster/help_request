@@ -18,4 +18,4 @@ li.answer id="answer-#{answer.id}"
 
   -if current_user&.author?(answer.question)
     div
-      = link_to 'Best answer', mark_best_question_path(answer.question, answer), method: :patch, class: 'best-answer-link', remote: true
+      = link_to 'Best answer', mark_best_answer_path(answer), method: :patch, class: 'best-answer-link', remote: true

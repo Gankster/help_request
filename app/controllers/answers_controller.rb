@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
-  before_action :load_answer, only: %i[destroy edit update]
+  before_action :load_answer, only: %i[destroy edit update mark_best]
 
   def new
     @answer = Answer.new
@@ -27,6 +27,15 @@ class AnswersController < ApplicationController
       flash.now[:errors] = @answer.errors.full_messages
     else
       flash.now[:notice] = 'You must be the author to edit the answer.'
+    end
+  end
+
+  def mark_best
+    @prev_best_answer = @answer.question.best_answer
+    if current_user.author?(@answer.question)
+      @answer.mark_as_best_answer
+    else
+      flash[:notice] = 'You must be the author to mark the answer as best.'
     end
   end
 
