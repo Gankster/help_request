@@ -6,6 +6,6 @@
   div = f.text_area :body
 
   div = f.label :files
-  div = f.file_field :files, multiple: true 
+  div = f.file_field :files, multiple: true, direct_upload: true
 
   div = f.submit 'Ask' 
