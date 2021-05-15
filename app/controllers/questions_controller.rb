@@ -19,11 +19,13 @@ class QuestionsController < ApplicationController
   def new
     @question = current_user.questions.new
     @question.links.new
+    @question.build_award
   end
 
   def create
     @question = current_user.questions.new(params_question)
     if @question.save
+      # current_user.associate_award(@question.award)
       redirect_to @question, notice: 'Your question successfully created.'
     else
       flash[:errors] = @question.errors.full_messages
@@ -54,7 +56,8 @@ class QuestionsController < ApplicationController
   private
 
   def params_question
-    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url],
+                                                    award_attributes: %i[name image])
   end
 
   def load_question

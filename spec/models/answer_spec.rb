@@ -46,6 +46,26 @@ RSpec.describe Answer, type: :model do
     end
   end
 
+  context 'when question has an award' do
+    let(:question) { create :question }
+    let(:answers) { create_list :answer, 2, question: question }
+    let!(:award) { create :award, question: question }
+
+    before { answers.second.mark_as_best_answer }
+
+    it 'gives award to the user of the best answer' do
+      expect(answers.second.author.awards).to eq [award]
+    end
+
+    context 'when another user has award of this question' do
+      it 'takes away award from another user' do
+        expect(answers.second.author.awards).to eq [award]
+        answers.first.mark_as_best_answer
+        expect(answers.second.author.awards.reload).to eq []
+      end
+    end
+  end
+
   it 'have many attached files' do
     expect(described_class.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
