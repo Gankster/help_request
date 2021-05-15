@@ -32,6 +32,8 @@ gem 'slim-rails'
 
 gem 'devise'
 
+gem 'aws-sdk-s3', require: false
+
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'
@@ -45,6 +47,8 @@ group :development, :test do
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubocop-performance', require: false
+
+  gem 'dotenv-rails'
 end
 
 group :development do
