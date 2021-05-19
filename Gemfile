@@ -34,6 +34,10 @@ gem 'devise'
 
 gem 'aws-sdk-s3', require: false
 
+gem "cocoon"
+gem "validate_url"
+gem 'active_storage_validations'
+
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'
