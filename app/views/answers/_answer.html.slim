@@ -13,6 +13,10 @@ li.answer id="answer-#{answer.id}"
   div
     - if answer.files.attached?
       = render partial: 'attachments/attachment', collection: answer.files
+  
+  = render 'votes/rating', votable: answer
+  - if signed_in? && !current_user.author?(answer)
+    = render 'votes/vote', vote: answer.vote_of(current_user), votable: answer
 
   - if current_user&.author?(answer)
     div
