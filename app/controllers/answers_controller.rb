@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
   before_action :load_answer, only: %i[destroy edit update mark_best]
+  after_action :publish_answer, only: :create
 
   def new
     @answer = Answer.new
@@ -60,5 +61,18 @@ class AnswersController < ApplicationController
 
   def load_question
     @question = Question.with_attached_files.find(params[:question_id])
+  end
+
+  def publish_answer
+    return unless @answer.valid?
+
+    answer_partial = ApplicationController.render(
+      partial: 'answers/answer_pub',
+      locals: { answer: @answer }
+    )
+
+    data = { answer: answer_partial, user_id: current_user.id }
+
+    QuestionChannel.broadcast_to(@answer.question, data)
   end
 end

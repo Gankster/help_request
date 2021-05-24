@@ -4,17 +4,19 @@ $(document).on('turbolinks:load', function() {
   const voteCancelLink = (vote) => `<a data-type="json" class="cancel-vote-link" data-remote="true" rel="nofollow" data-method="delete" href="/votes/${vote.id}">Cancel</a>`
 
   $('body').on('ajax:success', '.vote-link', (event) => {
-    vote = event.detail[0].vote
-    rating = event.detail[0].rating
-    message = vote.status === 'like' ? 'You like it!' : 'You dislike it!';
-    $(".vote").html(message + voteCancelLink(vote))
-    $(".vote-rating").html(`Rating: ${rating}`)
+    const vote = event.detail[0].vote
+    const rating = event.detail[0].rating
+    const message = vote.status === 'like' ? 'You like it!' : 'You dislike it!';
+    const vote_block = $(`#votable-${vote.votable_type.toLowerCase()}-${vote.votable_id}`);
+    vote_block.find(".vote").html(message + voteCancelLink(vote))
+    vote_block.find(".vote-rating").html(`Rating: ${rating}`)
   })
 
   $('body').on('ajax:success', '.cancel-vote-link', (event) => {
-    vote = event.detail[0].vote
-    rating = event.detail[0].rating
-    $(".vote").html(voteLink('Like', 'like', vote) + voteLink('Dislike', 'dislike', vote))
-    $(".vote-rating").html(`Rating: ${rating}`)
+    const vote = event.detail[0].vote
+    const rating = event.detail[0].rating
+    const vote_block = $(`#votable-${vote.votable_type.toLowerCase()}-${vote.votable_id}`);
+    vote_block.find(".vote").html(voteLink('Like', 'like', vote) + voteLink('Dislike', 'dislike', vote))
+    vote_block.find(".vote-rating").html(`Rating: ${rating}`)
   })
 }); 
