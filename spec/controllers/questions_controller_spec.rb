@@ -21,6 +21,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
+    include_context 'gon'
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
@@ -33,6 +34,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'renders show view' do
       expect(response).to render_template :show
+    end
+
+    it 'set gon user id' do
+      expect(gon['user_id']).to eq user.id
     end
 
     context 'when question has answers' do
@@ -61,6 +66,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    let(:last_question) { Question.order(:created_at).last }
+
     context 'with valid attrubutes' do
       subject(:http_request) { post :create, params: { question: attributes_for(:question) } }
 
@@ -71,6 +78,10 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to show view' do
         http_request
         expect(response).to redirect_to assigns(:question)
+      end
+
+      it 'broadcasts new question to channel' do
+        expect { http_request }.to have_broadcasted_to("questions").with(last_question)
       end
     end
 
@@ -88,8 +99,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with attached files' do
-      let(:last_question) { Question.order(:created_at).last }
-
       it 'attaches files to question' do
         post :create,
              params: { question: { title: 'Title', body: 'Body', files: [fixture_file_upload('spec/spec_helper.rb')] } }
@@ -100,8 +109,6 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with links' do
       context 'when links is valid' do
-        let(:last_question) { Question.order(:created_at).last }
-
         it 'adds links to question' do
           post :create,
                params: { question: { title: 'Title', body: 'Body',
@@ -115,17 +122,21 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       context 'when links is not valid' do
-        subject do
+        subject(:http_request) do
           post :create,
                params: { question: { title: 'Title', body: 'Body',
                                      links_attributes: { 0 => { url: 'https://google.com' } } } }
         end
 
         it 'does not create new question' do
-          expect { subject }.not_to change(Question, :count)
+          expect { http_request }.not_to change(Question, :count)
         end
 
         it { is_expected.to render_template(:new) }
+
+        it 'does not broadcast to channel' do
+          expect { http_request }.not_to have_broadcasted_to("questions")
+        end
       end
     end
   end

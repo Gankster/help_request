@@ -38,6 +38,8 @@ gem "cocoon"
 gem "validate_url"
 gem 'active_storage_validations'
 
+gem 'gon'
+
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'

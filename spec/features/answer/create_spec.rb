@@ -46,6 +46,99 @@ feature 'User can create answer for question on the question`s show page' do
     end
   end
 
+  describe 'Multiple sessions', js: true do
+    given(:user) { create(:user) }
+    given(:question) { create(:question) }
+    given(:other_question) { create :question }
+    given(:another_user) { create :user }
+
+    scenario "Answer appears on guests page" do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within '.new_answer' do
+          fill_in 'Body', with: 'Text of answer'
+          attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+
+          within '#links' do
+            click_on 'Add link'
+            fill_in 'Name', with: 'Google'
+            fill_in 'Url', with: 'https://google.com'
+          end
+          click_on 'Answer'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        within ".answers" do
+          expect(page).to have_content 'Text of answer'
+          expect(page).to have_content 'rails_helper.rb'
+          expect(page).to have_content 'spec_helper.rb'
+          expect(page).to have_link 'Google', href: 'https://google.com'
+          expect(page).to have_no_link 'Best answer'
+          expect(page).to have_content 'Comments'
+        end
+      end
+    end
+
+    scenario "Answer appears on another user page" do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('another_user') do
+        sign_in(another_user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within '.new_answer' do
+          fill_in 'Body', with: 'Text of answer'
+          click_on 'Answer'
+        end
+      end
+
+      Capybara.using_session('another_user') do
+        within ".answers" do
+          expect(page).to have_content 'Text of answer'
+          expect(page).to have_no_link 'Best answer'
+          expect(page).to have_content 'Comments'
+          expect(page).to have_content 'New comment'
+        end
+      end
+    end
+
+    scenario "Answer don't appears on another question's page" do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('other_question') do
+        visit question_path(other_question)
+      end
+
+      Capybara.using_session('user') do
+        within '.new_answer' do
+          fill_in 'Body', with: 'Text of answer'
+          click_on 'Answer'
+        end
+      end
+
+      Capybara.using_session('other_question') do
+        expect(page).not_to have_content 'Text of answer'
+      end
+    end
+  end
+
   describe 'Unauthenticated user' do
     given(:question) { create(:question) }
 
