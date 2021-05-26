@@ -30,7 +30,11 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 gem 'slim-rails'
 
-gem 'devise'
+gem 'devise', github: 'heartcombo/devise'
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-github'
+gem 'omniauth-google-oauth2'
 
 gem 'aws-sdk-s3', require: false
 
@@ -66,11 +70,13 @@ group :development do
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem "letter_opener"
 end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.26'
+  gem 'capybara-email'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
