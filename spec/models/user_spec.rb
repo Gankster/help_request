@@ -6,6 +6,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:answers) }
     it { is_expected.to have_many(:awards) }
     it { is_expected.to have_many(:comments) }
+    it { is_expected.to have_many(:authorizations).dependent(:destroy) }
   end
 
   describe '#author?' do
