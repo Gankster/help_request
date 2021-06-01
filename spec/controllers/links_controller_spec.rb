@@ -32,8 +32,8 @@ RSpec.describe LinksController, type: :controller do
             expect(another_question.links).to eq [another_question_link]
           end
 
-          it 'returns error message' do
-            expect(flash[:notice]).to eq 'You must be the author to delete the link.'
+          it 'return forbidden status' do
+            expect(response).to have_http_status(:forbidden)
           end
         end
       end
@@ -79,8 +79,8 @@ RSpec.describe LinksController, type: :controller do
             expect(another_answer.links).to eq [another_answer_link]
           end
 
-          it 'returns error message' do
-            expect(flash[:notice]).to eq 'You must be the author to delete the link.'
+          it 'return forbidden status' do
+            expect(response).to have_http_status(:forbidden)
           end
         end
       end
