@@ -14,4 +14,8 @@ class User < ApplicationRecord
   def author?(resource)
     resource.try(:user_id) == id
   end
+
+  def admin?
+    admin
+  end
 end

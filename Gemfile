@@ -44,6 +44,8 @@ gem 'active_storage_validations'
 
 gem 'gon'
 
+gem 'cancancan'
+
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'
@@ -83,6 +85,7 @@ group :test do
 
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
+  gem 'database_rewinder'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
