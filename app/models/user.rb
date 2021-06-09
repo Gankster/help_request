@@ -11,6 +11,16 @@ class User < ApplicationRecord
   has_many :comments
   has_many :authorizations, dependent: :destroy
 
+  has_many :access_grants,
+           class_name: 'Doorkeeper::AccessGrant',
+           foreign_key: :resource_owner_id,
+           dependent: :destroy
+
+  has_many :access_tokens,
+           class_name: 'Doorkeeper::AccessToken',
+           foreign_key: :resource_owner_id,
+           dependent: :destroy
+
   def author?(resource)
     resource.try(:user_id) == id
   end
