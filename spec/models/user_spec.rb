@@ -7,6 +7,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:awards) }
     it { is_expected.to have_many(:comments) }
     it { is_expected.to have_many(:authorizations).dependent(:destroy) }
+    it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
   end
 
   it {
@@ -44,6 +45,21 @@ RSpec.describe User, type: :model do
         user2 = create(:user)
         expect(user.author?(user2)).to be(false)
       end
+    end
+  end
+
+  describe '#subscribed?' do
+    let(:user) { create :user }
+
+    let(:question) { create :question }
+
+    it 'is truthy if user is subscribed to question' do
+      question.subscriptions.create!(user: user)
+      expect(user).to be_subscribed(question)
+    end
+
+    it 'is falsey if user is not subscribed to question' do
+      expect(user).not_to be_subscribed(question)
     end
   end
 end
