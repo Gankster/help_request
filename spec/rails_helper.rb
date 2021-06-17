@@ -78,6 +78,22 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each, sphinx: false) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, sphinx: false) do
+    DatabaseCleaner.start
+  end
+
+  config.after do
+    DatabaseCleaner.clean
+  end
+
   config.after(:all) do
     FileUtils.rm_rf(Rails.root.join("tmp/storage"))
   end

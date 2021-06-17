@@ -54,6 +54,9 @@ gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'whenever', require: false
 
+gem 'mysql2'
+gem 'thinking-sphinx'
+
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'
@@ -93,7 +96,7 @@ group :test do
 
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
-  gem 'database_rewinder'
+  gem 'database_cleaner'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
