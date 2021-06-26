@@ -59,6 +59,8 @@ gem 'thinking-sphinx'
 
 gem 'mini_racer'
 
+gem 'unicorn'
+
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'
@@ -94,6 +96,7 @@ group :development do
   gem 'capistrano-rvm', require: false
   gem 'capistrano-passenger', require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 group :test do
