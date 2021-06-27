@@ -1,36 +1,37 @@
-li.answer id="answer-#{answer.id}"
-  .answer-errors
-    = render 'shared/errors'
+- cache answer do
+  li.answer id="answer-#{answer.id}"
+    .answer-errors
+      = render 'shared/errors'
 
-  div 
-    = "Author: #{answer.author.email}"
-  div 
-    = answer.body
+    div 
+      = "Author: #{answer.author.email}"
+    div 
+      = answer.body
 
-  .answer-links
-    = render answer.links
+    .answer-links
+      = render answer.links
 
-  div
-    - if answer.files.attached?
-      = render partial: 'attachments/attachment', collection: answer.files
-  
-  div id="votable-answer-#{answer.id}"
-    = render 'votes/rating', votable: answer
-    - if signed_in? && can?(:create_vote, answer)
-      = render 'votes/vote', vote: answer.vote_of(current_user), votable: answer
-
-  - if can?(:destroy, answer)
     div
-      = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true
-  - if can?(:update, answer)
-    div
-      = link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      - if answer.files.attached?
+        = render partial: 'attachments/attachment', collection: answer.files
+    
+    div id="votable-answer-#{answer.id}"
+      = render 'votes/rating', votable: answer
+      - if signed_in? && can?(:create_vote, answer)
+        = render 'votes/vote', vote: answer.vote_of(current_user), votable: answer
 
-  div.hidden
-    = render partial: '/answers/answer_form', locals: { answer: answer, html_data: { id: "edit-answer-#{answer.id}" } }
+    - if can?(:destroy, answer)
+      div
+        = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true
+    - if can?(:update, answer)
+      div
+        = link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 
-  -if can?(:mark_best, answer)
-    div
-      = link_to 'Best answer', mark_best_answer_path(answer), method: :patch, class: 'best-answer-link', remote: true
+    div.hidden
+      = render partial: '/answers/answer_form', locals: { answer: answer, html_data: { id: "edit-answer-#{answer.id}" } }
 
-  = render "comments/comments", commentable: answer
+    -if can?(:mark_best, answer)
+      div
+        = link_to 'Best answer', mark_best_answer_path(answer), method: :patch, class: 'best-answer-link', remote: true
+
+    = render "comments/comments", commentable: answer
